@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">     
+    <style>
+    i {
+        margin-right: 1rem;
+        cursor: pointer;
+    }
+
+    #tableEmptyState #tableEmptyStateMsg {
+        color: #d1d1d1;
+    }
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Address Book</title>
+</head>
+<body>
+    <main class="container">
+        <div class="row">
+            <div class="col l12 m12 s12">
+                <h2 class="center">Address Book</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div class="col l6 m6 s12">
+                    <h6>Book Owner: </h6><span id="bookOwner">Name</span>
+                </div>
+                <div class="col l6 m6 s12">
+                    <h6># of Contacts: </h6><span id="numberOfContacts">0000</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l3 m6 s12"><input type="text" id="firstName" name="firstName"><label for="firstName">First Name</label></div>
+            <div class="col l3 m6 s12"><input type="text" id="lastName" name="lastName"><label for="lastName">Last Name</label></div>
+            <div class="col l3 m6 s12"><input type="number" id="phoneNumber" name="phoneNumber"><label for="phoneNumber">Phone Number</label></div>
+            <div class="col l3 m6 s12"><button class="btn" id="addContactBtn" style="width: 100%;">Add</button></div>
+        </div>
+        <div class="row">
+            <div class="col l12 m12 s12">
+                    <table class="striped">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone Number</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>                
+                        <tbody id="tableBody">
+                            <!-- <tr>
+                            <td>Alvin</td>
+                            <td>Eclair</td>
+                            <td>0000000000</td>
+                            <td><i class="fas fa-phone"></i><i class="fas fa-trash-alt"></i></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                    <div id="tableEmptyState">
+                        <h3 class="center" id="tableEmptyStateMsg">There are no contacts in your address book</h3>
+                    </div>
+            </div>
+        </div>
+
+    </main>
+    <script src="./build/app.bundle.js" type="text/javascript"></script>
+</body>
+</html>
