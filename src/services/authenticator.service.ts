@@ -1,5 +1,5 @@
 import { DB } from '../models/userdb.model';
-import { AccessMgmt } from '../models/accessmgmt.model';
+import { AccessMgmt } from './accessmgmt.service';
 
 export class Authenticator {
 
