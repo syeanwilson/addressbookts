@@ -1,26 +1,89 @@
 import { AddressBook } from './addressbook';
 import { Contact } from './contact';
 import { User } from './user';
+import { Authenticator } from './services/authenticator.service';
+import { UserService } from './services/user.service';
 // import * as $ from 'jquery';
 // import { isAlpha } from 'validator';
-
 declare var M: any;
 
-let addressbook = new AddressBook();
-let user = new User("Syean", "Wilson", "syean15@gmail.com");
+let auth = new Authenticator();
+let userService;
+let loggedIn = false;
+let accessToken;
+let email;
 
-let addContactBtn = document.getElementById("addContactBtn");
-addContactBtn.addEventListener("click", addContact);
+let loginView = document.getElementById("loginView");
+let AddressBookView = document.getElementById("addressBookView");
+// AddressBookView.style.display = "none";
 
-let tableEmptyState = document.getElementById("tableEmptyState");
+let addressbook;
+let user;
 
-init();
+let loginBtn = document.getElementById("loginBtn");
+loginBtn.addEventListener("click", () => {
 
-function init() {
-    let bookOwner = document.getElementById("bookOwner");
-    bookOwner.innerText = user.getFullName();
+    email = (<HTMLInputElement>document.getElementById("username")).value;
+    let password = (<HTMLInputElement>document.getElementById("password")).value;
+    let results = auth.login(email, password);
 
-    updateAddressBookState();
+    console.log(results);
+
+    if(results.error){
+        toast("Could not find an account for you. You may want to register first!");
+    } else {
+        accessToken = results.accessToken;
+        userService = new UserService();
+        let response = userService.getUserByEmail(email);
+        loggedIn = true;
+        user = new User(response.firstName, response.lastName, response.email);
+        loginView.style.display = "none";
+        addressbook = new AddressBook();
+        initApp();        
+        document.addEventListener("click", () => {
+            if(email && accessToken) {
+                // console.log("Making call to verify access...")
+                accessToken = auth.verifyAccess(email, accessToken);
+                if(accessToken.error) {
+                    if(accessToken.code == 401){
+                        console.log("Logging you out...");
+                        location.reload(true);
+                    }
+                } else {
+
+                }
+                
+            }    
+        });
+    }
+});
+
+let logOutBtn = document.getElementById("logOutBtn");
+logOutBtn.addEventListener("click", () => {
+    userService = null;
+    user = null;
+    email = null;
+    addressbook = null;
+    loggedIn = false;
+    AddressBookView.style.display = "none";
+    loginView.style.display = "block";
+});
+
+let addContactBtn; // = document.getElementById("addContactBtn");
+// addContactBtn.addEventListener("click", addContact);
+let tableEmptyState;// = document.getElementById("tableEmptyState");
+
+function initApp() {
+
+    if(loggedIn){
+        AddressBookView.style.display = "block";
+        addContactBtn = document.getElementById("addContactBtn");
+        addContactBtn.addEventListener("click", addContact);
+        tableEmptyState = document.getElementById("tableEmptyState");
+        let bookOwner = document.getElementById("bookOwner");
+        bookOwner.innerText = user.getFullName();
+        updateAddressBookState();
+    } 
 }
 
 function updateAddressBookState() {
