@@ -1,27 +1,30 @@
 import {Contact} from './contact';
+import {ContactDB} from './models/contactsdb.models'
 
 export class AddressBook {
-    public contacts: Map<Number, Contact>;
-    public nextId;
+    public contacts;
     public numContacts = 0;
+    private db: ContactDB;
 
-    constructor() {
-        this.contacts = new Map<Number, Contact>();
-        this.nextId = 1;
+    constructor(email: String) {
+        this.db = new ContactDB(email);
+        this.contacts = this.db.getAllContacts();
     }
 
-    public addContact(contact: Contact) {
-        this.contacts.set(this.nextId, contact);
-        this.nextId++;
+    public addContact(key: any, contact: Contact) {
+        this.contacts.set(key, contact);
+        this.db.insertContact(key, contact);
         this.numContacts++;
     }
 
-    public removeContact(id: Number) {
-        this.contacts.delete(id);
+    public removeContact(key: any) {
+        this.contacts.delete(key);
+        this.db.deleteContact(key);
         this.numContacts--;
     }
 
     public getContacts() {
+        console.log("Getting contacts from addrress book...");
         return this.contacts;
     }
 
@@ -29,11 +32,11 @@ export class AddressBook {
         console.log(this.contacts);
     }
 
-    public getNextId() {
-        return this.nextId;
-    }
-
     public getNumberOfContacts() {
         return this.numContacts;
+    }
+
+    public saveBook(email: String) {
+        this.db.saveContacts(email);
     }
 }

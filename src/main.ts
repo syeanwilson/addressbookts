@@ -7,6 +7,30 @@ import { UserService } from './services/user.service';
 // import { isAlpha } from 'validator';
 declare var M: any;
 
+// let contacts = new Map();
+// contacts.set(6789956698, {
+//     phoneNumber: 6789956698,
+//     firstName: "Syean",
+//     lastName:"Wilson"
+// });
+// contacts.set(6784589919, {
+//     phoneNumber: 6789956698,
+//     firstName: "Jean",
+//     lastName:"Russell"
+// });
+
+// for (let key of contacts.keys()){
+//     console.log(key);
+// }
+// let john = new Contact("John", "theBaptist", 6783427765, 1);
+// let johnStore = {
+//     key: 6783427765,
+//     contact: john
+// }
+// let arrString = "[1,2,3,3,4]";
+// let arr = new Array(JSON.parse(arrString));
+// console.log(new Set(JSON.parse(arrString)));
+
 let auth = new Authenticator();
 let userService;
 let loggedIn = false;
@@ -38,7 +62,7 @@ loginBtn.addEventListener("click", () => {
         loggedIn = true;
         user = new User(response.firstName, response.lastName, response.email);
         loginView.style.display = "none";
-        addressbook = new AddressBook();
+        addressbook = new AddressBook(email);
         initApp();        
         document.addEventListener("click", () => {
             if(email && accessToken) {
@@ -72,16 +96,27 @@ logOutBtn.addEventListener("click", () => {
 let addContactBtn; // = document.getElementById("addContactBtn");
 // addContactBtn.addEventListener("click", addContact);
 let tableEmptyState;// = document.getElementById("tableEmptyState");
+let saveBookBtn = document.getElementById("saveBookBtn");
+saveBookBtn.addEventListener("click", () => {
+    addressbook.saveBook(email);
+})
 
 function initApp() {
 
     if(loggedIn){
+        console.log("Initializing app...")
         AddressBookView.style.display = "block";
         addContactBtn = document.getElementById("addContactBtn");
         addContactBtn.addEventListener("click", addContact);
         tableEmptyState = document.getElementById("tableEmptyState");
         let bookOwner = document.getElementById("bookOwner");
         bookOwner.innerText = user.getFullName();
+
+        let savedContacts = addressbook.getContacts();
+        for(let contact of savedContacts.values()) {
+            addContactToTable(contact);
+        }
+
         updateAddressBookState();
     } 
 }
@@ -112,8 +147,8 @@ function addContact() {
         return;
     }
 
-    let newContact = new Contact(firstName.value.trim(), lastName.value.trim(), Number(phoneNumber.value.trim()), addressbook.getNextId());
-    addressbook.addContact(newContact);
+    let newContact = new Contact(firstName.value.trim(), lastName.value.trim(), Number(phoneNumber.value.trim()), Number(phoneNumber.value.trim()));
+    addressbook.addContact(Number(phoneNumber.value.trim()), newContact);
 
     addContactToTable(newContact);
 

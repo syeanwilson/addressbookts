@@ -3,6 +3,7 @@
           "target": "es5",
           "suppressImplicitAnyIndexErrors": true,
           "strictNullChecks": false,
+          "downlevelIteration": true,
           "lib": [
               "es5", "es2015", "dom"
           ],
