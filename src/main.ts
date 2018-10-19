@@ -7,30 +7,6 @@ import { UserService } from './services/user.service';
 // import { isAlpha } from 'validator';
 declare var M: any;
 
-// let contacts = new Map();
-// contacts.set(6789956698, {
-//     phoneNumber: 6789956698,
-//     firstName: "Syean",
-//     lastName:"Wilson"
-// });
-// contacts.set(6784589919, {
-//     phoneNumber: 6789956698,
-//     firstName: "Jean",
-//     lastName:"Russell"
-// });
-
-// for (let key of contacts.keys()){
-//     console.log(key);
-// }
-// let john = new Contact("John", "theBaptist", 6783427765, 1);
-// let johnStore = {
-//     key: 6783427765,
-//     contact: john
-// }
-// let arrString = "[1,2,3,3,4]";
-// let arr = new Array(JSON.parse(arrString));
-// console.log(new Set(JSON.parse(arrString)));
-
 let auth = new Authenticator();
 let userService;
 let loggedIn = false;
