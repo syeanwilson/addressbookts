@@ -12,14 +12,27 @@ export class AddressBook {
     }
 
     public addContact(key: any, contact: Contact) {
+        if(this.contacts.has(key)){
+            return false;
+        }
         this.contacts.set(key, contact);
         this.db.insertContact(key, contact);
         this.numContacts++;
+        return true;
     }
 
     public removeContact(key: any) {
-        this.contacts.delete(key);
-        this.db.deleteContact(key);
+       
+       if(this.contacts.delete(key)){
+        if(this.db.deleteContact(key)) {
+            console.log(`${key} deleted`);
+        }else{
+            console.log(`Could not delete ${key} from DB`);
+        }
+       } else {
+           console.log(`Could not delete ${key}. Not in loaded keys`);
+       }
+        
         this.numContacts--;
     }
 
@@ -33,7 +46,7 @@ export class AddressBook {
     }
 
     public getNumberOfContacts() {
-        return this.numContacts;
+        return this.contacts.size;
     }
 
     public saveBook(email: String) {

@@ -1,11 +1,12 @@
 
-export class DB {
+export class UserDB {
 
     constructor() {}
 
     private DB = {
         users: new Map([
             ["syean15@gmail.com", {
+                id: 1,
                 firstName: "Syean",
                 lastName: "Wilson",
                 fullName: "Syean Wilson",
@@ -13,6 +14,7 @@ export class DB {
                 email: "syean15@gmail.com"
             }],
             ["bdubs@gmail.com", {
+                id: 2,
                 firstName: "Brandon",
                 lastName: "Wilson",
                 fullName: "Brandon Wilson",
@@ -20,19 +22,23 @@ export class DB {
                 email: "bdubs@gmail.com"    
             }],
             ["syean", {
-                firstName: "Brandon",
+                id: 3,
+                firstName: "CC",
                 lastName: "Wilson",
                 fullName: "Brandon Wilson",
                 password: "pass",
                 email: "bdubs@gmail.com"    
+            }],
+            ["sayed", {
+                id: 4,
+                firstName: "Sayed",
+                lastName: "Hussaini",
+                fullName: "Sayed Hussaini",
+                password: "pass",
+                email: "sayed"    
             }]
         ])
-    }
-
-    private error404 = {
-        error: "User does not exist",
-        code: 404
-    }
+    }    
 
     public getUserByEmail(email: String) {
 
@@ -41,13 +47,17 @@ export class DB {
         if(this.DB.users.has(key)){
             return this.DB.users.get(key);
         } else {
-            return this.error404;
+            return this.notFound();
         }
 
     }
 
     public notFound() {
-        return this.error404;
+
+        return {
+            error: "User does not exist",
+            code: 404
+        }
     }
 
 }

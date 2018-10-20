@@ -76,6 +76,7 @@ export class ContactDB {
                         this.contacts.set(key, new Contact(loadedContact.firstName, loadedContact.lastName, loadedContact.phoneNumber, loadedContact.phoneNumber));
                     }
                 }
+                console.log("All loaded contacts => " + this.contacts.size);
                 return this.contacts;
             } else {
                 return new Map();

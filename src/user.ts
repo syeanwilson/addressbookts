@@ -4,11 +4,13 @@ export class User {
     private lastName: String;
     private fullName: String;
     private email: String;
+    private id: number;
 
-    constructor(firstName: String, lastName: String, email: String){
+    constructor(firstName: String, lastName: String, email: String, id: number){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.id = id;
         this.setFullName(firstName, lastName);
     }
 
@@ -38,6 +40,10 @@ export class User {
 
     public getFullName() {
         return `${this.firstName} ${this.lastName}`;
+    }
+
+    public getId() {
+        return this.id;
     }
 
     private setFullName(firstName: String, lastName: String) {

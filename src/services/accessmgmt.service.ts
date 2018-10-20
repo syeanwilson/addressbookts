@@ -38,11 +38,27 @@ export class AccessMgmt {
         }        
     }
 
+    public createSession(email: String) {
+        let addressBookSession = {
+            email: email
+        }
+        window.sessionStorage.setItem("addressBookSession", JSON.stringify(addressBookSession));
+    }
+
+    public checkSession(email: String) {
+        let session;
+        if(session = window.sessionStorage.getItem("addressBookSession")){
+            return JSON.parse(session);
+        } else {
+            return false;
+        }
+    }
+
+    public destroySession() {
+        window.sessionStorage.clear();
+    }
+
     public verifyAccess( token: any, email?: String,) {
-        
-        // console.log("Entered accessmgmt verifyAccess with token: " + token);
-        // console.log("Key in accessToken: " + this.accessTokens.keys());
-        // return this.accessTokens.has(hash);
         return this.getAccessToken(email, token);
     }
 }

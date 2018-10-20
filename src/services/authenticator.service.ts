@@ -1,4 +1,4 @@
-import { DB } from '../models/userdb.model';
+import { UserDB } from '../models/userdb.model';
 import { AccessMgmt } from './accessmgmt.service';
 
 export class Authenticator {
@@ -11,7 +11,7 @@ export class Authenticator {
 
     public login(email: String, password: String) {
     
-        const db = new DB();
+        const db = new UserDB();
         let results = Object(db.getUserByEmail(email));    
         if(results != null) {
     

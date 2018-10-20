@@ -36,7 +36,7 @@ loginBtn.addEventListener("click", () => {
         userService = new UserService();
         let response = userService.getUserByEmail(email);
         loggedIn = true;
-        user = new User(response.firstName, response.lastName, response.email);
+        user = new User(response.firstName, response.lastName, response.email, response.id);
         loginView.style.display = "none";
         addressbook = new AddressBook(email);
         initApp();        
@@ -60,18 +60,19 @@ loginBtn.addEventListener("click", () => {
 
 let logOutBtn = document.getElementById("logOutBtn");
 logOutBtn.addEventListener("click", () => {
+    addressbook.saveBook(email);
     userService = null;
     user = null;
     email = null;
     addressbook = null;
     loggedIn = false;
     AddressBookView.style.display = "none";
-    loginView.style.display = "block";
+    loginView.style.display = "block";    
+    window.location.reload(true);
 });
 
-let addContactBtn; // = document.getElementById("addContactBtn");
-// addContactBtn.addEventListener("click", addContact);
-let tableEmptyState;// = document.getElementById("tableEmptyState");
+let addContactBtn; 
+let tableEmptyState;
 let saveBookBtn = document.getElementById("saveBookBtn");
 saveBookBtn.addEventListener("click", () => {
     addressbook.saveBook(email);
@@ -123,16 +124,18 @@ function addContact() {
         return;
     }
 
-    let newContact = new Contact(firstName.value.trim(), lastName.value.trim(), Number(phoneNumber.value.trim()), Number(phoneNumber.value.trim()));
-    addressbook.addContact(Number(phoneNumber.value.trim()), newContact);
-
-    addContactToTable(newContact);
-
-    firstName.value = "";
-    lastName.value = "";
-    phoneNumber.value = null
-
-    updateAddressBookState();
+    let contactId = user.getId() + "-" + Number(phoneNumber.value.trim());
+    let newContact = new Contact(firstName.value.trim(), lastName.value.trim(), Number(phoneNumber.value.trim()), contactId);
+    
+    if(addressbook.addContact(contactId, newContact)){
+        addContactToTable(newContact);
+        updateAddressBookState();
+        firstName.value = "";
+        lastName.value = "";
+        phoneNumber.value = null;
+    } else {
+        toast("Contact with number already exist. Duplicate number not allowed.");
+    } 
 
 }
 
@@ -157,11 +160,11 @@ function addContactToTable(contact: Contact) {
 
     let phoneIcon = document.createElement("i");
     phoneIcon.setAttribute("class","fas fa-phone");
-    phoneIcon.setAttribute("name", "phone-" + contact.getId().toString());
+    phoneIcon.setAttribute("name", "phone_" + contact.getId().toString());
 
     let trashIcon = document.createElement("i");
     trashIcon.setAttribute("class", "fas fa-trash-alt");
-    trashIcon.setAttribute("name", "trash-" + contact.getId().toString());
+    trashIcon.setAttribute("name", "trash_" + contact.getId().toString());
     trashIcon.addEventListener("click", ($event) => {
         deleteContact($event);
     })
@@ -180,8 +183,8 @@ function addContactToTable(contact: Contact) {
 
 function deleteContact(e) {
     let contactName = e.target.attributes.name.nodeValue;
-    let contactId = (contactName.split('-'))[1];
-    addressbook.removeContact(contactId);
+    let contactId = (contactName.split('_'))[1];
+    addressbook.removeContact(user.getId() +"-"+ contactId);
     deleteContactFromTable(contactId);
 
     updateAddressBookState();
