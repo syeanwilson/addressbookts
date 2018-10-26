@@ -1,4 +1,4 @@
-import { DB } from '../models/userdb.model'
+import { UserDB } from '../models/userdb.model'
 
 export class UserService {
 
@@ -7,7 +7,7 @@ export class UserService {
     public getUserByEmail(email: String) {
 
         let key: String = email;
-        const db = new DB();    
+        const db = new UserDB();    
         const results = db.getUserByEmail(key);
         return results;
     

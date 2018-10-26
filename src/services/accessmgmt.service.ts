@@ -32,6 +32,7 @@ export class AccessMgmt {
                 return {error: "Authentication failed. No access.", code: 401}
             }
         } else {
+            this.accessTokens.clear();
             this.accessTokens.add(hash);
             this.logs.set(hash, {email: email, timeIssued: time, accessToken: hash, expire: 900000})
             return hash;
@@ -43,14 +44,15 @@ export class AccessMgmt {
             email: email
         }
         window.sessionStorage.setItem("addressBookSession", JSON.stringify(addressBookSession));
+        return addressBookSession;
     }
 
-    public checkSession(email: String) {
+    public checkSession() {
         let session;
         if(session = window.sessionStorage.getItem("addressBookSession")){
             return JSON.parse(session);
         } else {
-            return false;
+            return {error: true, action: "logout"};
         }
     }
 

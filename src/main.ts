@@ -20,6 +20,17 @@ let AddressBookView = document.getElementById("addressBookView");
 let addressbook;
 let user;
 
+let tempEmail = (auth.isLoggedIn());
+console.log(tempEmail);
+if(tempEmail.error) {
+    
+} else {
+    email = tempEmail.email;
+    tempEmail = null;
+    loggedIn = true;
+    reInitApp(email);
+}
+
 let loginBtn = document.getElementById("loginBtn");
 loginBtn.addEventListener("click", () => {
 
@@ -30,7 +41,7 @@ loginBtn.addEventListener("click", () => {
     console.log(results);
 
     if(results.error){
-        toast("Could not find an account for you. You may want to register first!");
+        toast("Email or password does not match.");
     } else {
         accessToken = results.accessToken;
         userService = new UserService();
@@ -40,24 +51,17 @@ loginBtn.addEventListener("click", () => {
         loginView.style.display = "none";
         addressbook = new AddressBook(email);
         initApp();        
-        document.addEventListener("click", () => {
-            if(email && accessToken) {
-                // console.log("Making call to verify access...")
-                accessToken = auth.verifyAccess(email, accessToken);
-                if(accessToken.error) {
-                    if(accessToken.code == 401){
-                        console.log("Logging you out...");
-                        location.reload(true);
-                    }
-                } else {
-
-                }
-                
-            }    
-        });
+        initAccessMonitor();
     }
 });
 
+function logIn() {
+    
+}
+
+/**
+ * Log out
+ */
 let logOutBtn = document.getElementById("logOutBtn");
 logOutBtn.addEventListener("click", () => {
     addressbook.saveBook(email);
@@ -66,6 +70,7 @@ logOutBtn.addEventListener("click", () => {
     email = null;
     addressbook = null;
     loggedIn = false;
+    auth.logout();
     AddressBookView.style.display = "none";
     loginView.style.display = "block";    
     window.location.reload(true);
@@ -76,11 +81,11 @@ let tableEmptyState;
 let saveBookBtn = document.getElementById("saveBookBtn");
 saveBookBtn.addEventListener("click", () => {
     addressbook.saveBook(email);
-})
+});
 
 function initApp() {
 
-    if(loggedIn){
+     if(loggedIn){
         console.log("Initializing app...")
         AddressBookView.style.display = "block";
         addContactBtn = document.getElementById("addContactBtn");
@@ -96,6 +101,39 @@ function initApp() {
 
         updateAddressBookState();
     } 
+}
+
+function reInitApp(email: String) {
+
+    accessToken = auth.renewAccess(email);
+    userService = new UserService();
+    let response = userService.getUserByEmail(email);
+    loggedIn = true;
+    user = new User(response.firstName, response.lastName, response.email, response.id);
+    loginView.style.display = "none";
+    addressbook = new AddressBook(email);
+
+    initApp();
+    initAccessMonitor();
+}
+
+function initAccessMonitor() {
+    document.addEventListener("click", () => {
+        if(email && accessToken) {
+            // console.log("Making call to verify access...")
+            accessToken = auth.verifyAccess(email, accessToken);
+            if(accessToken.error) {
+                if(accessToken.code == 401){
+                    console.log("Logging you out...");
+                    auth.logout();
+                    location.reload(true);
+                }
+            } else {
+
+            }
+            
+        }    
+    });
 }
 
 function updateAddressBookState() {

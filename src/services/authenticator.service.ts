@@ -19,7 +19,11 @@ export class Authenticator {
                 return results;
             } else {
                 if(password === results.password) {
-                    return {success: true, accessToken: this.accessMgmt.getAccessToken(email)}
+                    return {
+                        success: true, 
+                        accessToken: this.accessMgmt.getAccessToken(email),
+                        session: this.accessMgmt.createSession(email)
+                    }
                 } else {
                     return {error: "Email or password does not match.", code: 401}
                 }                
@@ -33,7 +37,11 @@ export class Authenticator {
     }
     
     public logout() {
-    
+        this.accessMgmt.destroySession();    
+    }
+
+    public isLoggedIn() {
+        return this.accessMgmt.checkSession();
     }
 
     public verifyAccess(email: String, token: any) {
@@ -42,6 +50,10 @@ export class Authenticator {
         
         // console.log("Verify access called:" + email + ", " + hash);
         return result;
+    }
+
+    public renewAccess(email: String) {
+        return this.accessMgmt.getAccessToken(email);
     }
 
 }

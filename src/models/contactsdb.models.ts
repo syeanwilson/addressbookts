@@ -73,7 +73,8 @@ export class ContactDB {
                     if(contact = window.localStorage.getItem(String(key))){
                         console.log("Loaded contact is " + contact);
                         let loadedContact = JSON.parse(contact);
-                        this.contacts.set(key, new Contact(loadedContact.firstName, loadedContact.lastName, loadedContact.phoneNumber, loadedContact.phoneNumber));
+                        this.contacts.set(key, 
+                            new Contact(loadedContact.firstName, loadedContact.lastName, loadedContact.phoneNumber, loadedContact.phoneNumber));
                     }
                 }
                 console.log("All loaded contacts => " + this.contacts.size);
@@ -97,7 +98,7 @@ export class ContactDB {
             }            
             window.localStorage.setItem(String(email), JSON.stringify(keys));
             console.log("Contacts saved.");
-
+            //Add return to check if save was successful to notify user 
         } else {
             console.log("Local storage not supported");
             return {error: "Local storage not supported"}
