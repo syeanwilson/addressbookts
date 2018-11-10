@@ -3,6 +3,7 @@ import { Contact } from './contact';
 import { User } from './user';
 import { Authenticator } from './services/authenticator.service';
 import { UserService } from './services/user.service';
+import { Observable, fromEvent } from 'rxjs';
 // import * as $ from 'jquery';
 // import { isAlpha } from 'validator';
 declare var M: any;
@@ -81,7 +82,27 @@ let tableEmptyState;
 let saveBookBtn = document.getElementById("saveBookBtn");
 saveBookBtn.addEventListener("click", () => {
     addressbook.saveBook(email);
+    toast("Contacts saved!");
 });
+
+let clock = document.querySelector("#clock");
+const timer$ = Observable.create(function (observer){
+    setInterval(()=>{
+        let time = new Date();
+        observer.next(`${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`);
+    }, 1000);
+});
+
+let watchTime = timer$.subscribe((x)=>{
+    clock.innerHTML = x;
+})
+
+// const testBtn$ = fromEvent(document.querySelector("#testBtn"), 'click');
+// const sub = testBtn$.subscribe(() => {       
+//     watchTime.unsubscribe();
+// })
+
+// setTimeout(()=>{watchTime.unsubscribe()}, 10000);
 
 function initApp() {
 
