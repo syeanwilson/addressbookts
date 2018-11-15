@@ -1,12 +1,14 @@
-export class User {
+import { IUser } from './interfaces/user.interface';
 
-    private firstName: String;
-    private lastName: String;
-    private fullName: String;
-    private email: String;
-    private id: number;
+export class User implements IUser {
 
-    constructor(firstName: String, lastName: String, email: String, id: number){
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    email: string;
+    id: number;
+
+    constructor(firstName: string, lastName: string, email: string, id: number){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -14,15 +16,15 @@ export class User {
         this.setFullName(firstName, lastName);
     }
 
-    public setFirstName(firstName: String) {
+    public setFirstName(firstName: string) {
         this.firstName =firstName;
     }
 
-    public setLastName(lastName: String) {
+    public setLastName(lastName: string) {
         this.lastName = lastName;
     }
 
-    public setEmail(email: String) {
+    public setEmail(email: string) {
         this.email = email;
     }
 
