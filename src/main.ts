@@ -1,5 +1,5 @@
 import { AddressBook } from './addressbook';
-import { Contact } from './contact';
+import { Contact, ContactModel } from './contact';
 import { User } from './user';
 import { Authenticator } from './services/authenticator.service';
 import { UserService } from './services/user.service';
@@ -13,6 +13,7 @@ let userService;
 let loggedIn = false;
 let accessToken;
 let email;
+let subscriptions = [];
 
 let loginView = document.getElementById("loginView");
 let AddressBookView = document.getElementById("addressBookView");
@@ -33,8 +34,9 @@ if(tempEmail.error) {
 }
 
 let loginBtn = document.getElementById("loginBtn");
-loginBtn.addEventListener("click", () => {
+loginBtn.addEventListener("click", logIn);
 
+function logIn() {
     email = (<HTMLInputElement>document.getElementById("username")).value;
     let password = (<HTMLInputElement>document.getElementById("password")).value;
     let results = auth.login(email, password);
@@ -54,28 +56,13 @@ loginBtn.addEventListener("click", () => {
         initApp();        
         initAccessMonitor();
     }
-});
-
-function logIn() {
-    
 }
 
 /**
  * Log out
  */
 let logOutBtn = document.getElementById("logOutBtn");
-logOutBtn.addEventListener("click", () => {
-    addressbook.saveBook(email);
-    userService = null;
-    user = null;
-    email = null;
-    addressbook = null;
-    loggedIn = false;
-    auth.logout();
-    AddressBookView.style.display = "none";
-    loginView.style.display = "block";    
-    window.location.reload(true);
-});
+logOutBtn.addEventListener("click", logout);
 
 let addContactBtn; 
 let tableEmptyState;
@@ -97,6 +84,7 @@ let watchTime = timer$.subscribe((x)=>{
     clock.innerHTML = x;
 })
 
+subscriptions.push(watchTime);
 // const testBtn$ = fromEvent(document.querySelector("#testBtn"), 'click');
 // const sub = testBtn$.subscribe(() => {       
 //     watchTime.unsubscribe();
@@ -146,8 +134,7 @@ function initAccessMonitor() {
             if(accessToken.error) {
                 if(accessToken.code == 401){
                     console.log("Logging you out...");
-                    auth.logout();
-                    location.reload(true);
+                    logout();
                 }
             } else {
 
@@ -257,4 +244,26 @@ function deleteContactFromTable(id) {
 
 function toast(msg) {
     M.toast({html: msg, classes: 'rounded'});
+}
+
+function logout() {
+    subscriptions.forEach(sub => {
+        sub.unsubscribe();
+    });
+
+    addressbook.saveBook(email);
+    userService = null;
+    user = null;
+    email = null;
+    addressbook = null;
+    loggedIn = false;
+    auth.logout();
+    AddressBookView.style.display = "none";
+    
+    // while (AddressBookView.firstChild) {
+    //     AddressBookView.removeChild(AddressBookView.firstChild);
+    // }
+
+    loginView.style.display = "block";    
+    window.location.reload(true);
 }

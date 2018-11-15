@@ -1,34 +1,49 @@
-export class Contact {            
+import { IContact } from './interfaces/contact.interface';
 
-    private firstName;
-    private lastName;
-    private phoneNumber;
-    private id;
+export class Contact implements IContact {            
 
-    constructor(firstName: String, lastName: String, phoneNumber: Number, id: any) {
+    firstName: string;
+    lastName: string;
+    phoneNumber: number;
+    type: string;
+    dateCreated: Date; 
+    id: number | string;
+
+    constructor(firstName: string, lastName: string, phoneNumber: number, id: any) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.id = id;
     }
 
-    public setFirstName(firstName: String) { this.firstName = firstName; }
-    public setLasttName(lastName: String) { this.lastName = lastName; }
-    public setPhoneNumber(phoneNumber: String) { this.phoneNumber = phoneNumber; }
+    public setFirstName(firstName: string) { this.firstName = firstName; }
+    public setLasttName(lastName: string) { this.lastName = lastName; }
+    public setPhoneNumber(phoneNumber: number) { this.phoneNumber = phoneNumber; }
 
-    public getFirstName(): String {
+    public getFirstName(): string {
         return this.firstName;
     }
 
-    public getLastName(): String {
+    public getLastName(): string {
         return this.lastName;
     }
 
-    public getPhoneNumber(): Number {
+    public getPhoneNumber(): number {
         return this.phoneNumber;
     }
 
-    public getId(): Number {
+    public getId(): number | string {
         return this.id;
+    }
+}
+
+export let ContactModel: IContact = {
+    firstName: "",
+    lastName: "",
+    phoneNumber: 0,
+    type: "",
+    id: 0,
+    getId: ():number | string => {
+        return "This is an id from ContactModel";
     }
 }
